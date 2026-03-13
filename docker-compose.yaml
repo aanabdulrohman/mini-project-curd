@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Database: MySQL 8
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: crud_db
+      MYSQL_ROOT_PASSWORD: password123
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  # PHP: Menggunakan image resmi tanpa Dockerfile
+  php:
+    image: php:8.2-fpm
+    container_name: php_service
+    volumes:
+      - ./html:/var/www/html
+    # Menginstal ekstensi mysqli secara runtime
+    command: sh -c "docker-php-ext-install mysqli && php-fpm"
+    depends_on:
+      - db
+
+  # Web Server: Nginx
+  web:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/var/www/html
+      - ./css:/var/www/html/css
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
