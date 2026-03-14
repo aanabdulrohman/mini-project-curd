@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and Run Containers (Test)
         run: |
-          docker compose up -d
+          docker compose --env-file .env up -d
           
       - name: Wait for MySQL Healthcheck
         run: |
