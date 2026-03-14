@@ -1,22 +1,40 @@
-name: Deploy CRUD App
+name: CI Pipeline (Build Test)
+
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  deploy:
+  build-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /path/to/project
-            git pull origin main
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > .env
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-            docker-compose down
-            docker-compose up -d --build
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create .env file for Testing
+        run: |
+          echo "DB_PASSWORD=testpass" > .env
+          echo "DB_NAME=test_db" >> .env
+
+      - name: Validate Docker Compose Configuration
+        run: docker-compose config
+
+      - name: Build and Run Containers (Test)
+        run: |
+          docker-compose up -d
+          
+      - name: Wait for MySQL Healthcheck
+        run: |
+          echo "Waiting for MySQL to be healthy..."
+          timeout 60s sh -c 'until [ "$(docker inspect -f {{.State.Health.Status}} mysql_db)" == "healthy" ]; do sleep 5; done'
+
+      - name: Check PHP Service Logs
+        if: always()
+        run: docker logs php_service
+
+      - name: Stop and Cleanup
+        if: always()
+        run: docker-compose down -v
