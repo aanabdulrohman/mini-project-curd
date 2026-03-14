@@ -20,11 +20,11 @@ jobs:
           echo "DB_NAME=test_db" >> .env
 
       - name: Validate Docker Compose Configuration
-        run: docker-compose config
+        run: docker compose config
 
       - name: Build and Run Containers (Test)
         run: |
-          docker-compose up -d
+          docker compose up -d
           
       - name: Wait for MySQL Healthcheck
         run: |
@@ -37,4 +37,4 @@ jobs:
 
       - name: Stop and Cleanup
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
