@@ -30,7 +30,7 @@ Sistem ini terdiri dari tiga layanan utama yang saling terhubung dalam satu jari
 Pastikan Anda sudah menginstal **Docker** dan **Docker Compose** di mesin Anda.
 
 ### 2. Konfigurasi Environment
-Salin file `.env.example` (atau buat baru) dan beri nama `.env`:
+Buat file baru dan beri nama `.env`:
 ```env
 DB_PASSWORD=your_secure_password
 DB_NAME=crud_db
