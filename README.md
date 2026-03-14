@@ -9,7 +9,7 @@ Proyek ini adalah simulasi sistem manajemen inventaris barang sederhana yang dib
     * Nginx dikonfigurasi untuk memblokir akses ke file sensitif (`.env`, `.git`).
     * Aplikasi PHP menggunakan *Prepared Statements* untuk mencegah SQL Injection.
 * **Dynamic Configuration**: Manajemen kredensial menggunakan Environment Variables (`.env`).
-* **CI/CD Pipeline**: Otomatisasi deployment menggunakan GitHub Actions.
+* **CI Pipeline**: Otomatisasi deployment menggunakan GitHub Actions.
 * **Resilience Logic**: Implementasi *connection retry logic* pada sisi aplikasi untuk menangani *startup delay* pada database.
 
 ---
