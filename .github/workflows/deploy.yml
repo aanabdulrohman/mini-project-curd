@@ -1,0 +1,22 @@
+name: Deploy CRUD App
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/project
+            git pull origin main
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            docker-compose down
+            docker-compose up -d --build
