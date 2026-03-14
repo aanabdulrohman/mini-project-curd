@@ -18,13 +18,14 @@ jobs:
         run: |
           echo "DB_PASSWORD=testpass" > .env
           echo "DB_NAME=test_db" >> .env
+          echo "DB_USER=root" >> .env
 
       - name: Validate Docker Compose Configuration
         run: docker compose config
 
       - name: Build and Run Containers (Test)
         run: |
-          docker compose --env-file .env up -d
+          docker compose up -d
           
       - name: Wait for MySQL Healthcheck
         run: |
